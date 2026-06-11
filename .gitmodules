@@ -1,0 +1,3 @@
+[submodule "submodules/clers"]
+	path = submodules/clers
+	url = https://github.com/peterdoyle1717/clers.git
