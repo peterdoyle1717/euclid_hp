@@ -15,7 +15,14 @@
 
    One TSV row per case on stdout; diagnostics go to stderr. *)
 
-argv = $ScriptCommandLine;
+(* wolframscript populates $ScriptCommandLine = {script, args...};
+   `wolfram -script` (observed: 14.3 Linux) leaves it EMPTY and puts
+   {kernel, "-script", script, args...} in $CommandLine instead. *)
+argv = If[Length[$ScriptCommandLine] > 0,
+  $ScriptCommandLine,
+  Module[{cl = $CommandLine, pos},
+    pos = Position[cl, "-script"];
+    If[pos === {}, cl, Drop[cl, pos[[1, 1]]]]]];
 If[Length[argv] < 5,
   Print["usage: solve_chunk.wls SOLVER_DIR CHUNK_TSV PREC OBJ_DIR"];
   Exit[2]];
